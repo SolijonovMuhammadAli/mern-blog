@@ -1,6 +1,6 @@
 import React from "react";
-import NavbarContainer from "./Navbar";
-import TodoList from "./TodoList";
+import NavbarContainer from "../components/Navbar";
+import TodoList from "../components/TodoList";
 
 function Dashboard() {
   return (
