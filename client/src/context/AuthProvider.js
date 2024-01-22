@@ -11,13 +11,12 @@ const AuthProvider = ({ children }) => {
 
   const signIn = async (data) => {
     try {
-      // axios.post('/')
       axios
         .post("/api/auth/login", { ...data })
         .then((res) => {
           setUser(res.data);
           localStorage.setItem("userData", JSON.stringify(res.data));
-          navigate("/dashboard");
+          navigate("/home");
         })
         .catch((err) => console.log(err));
     } catch (err) {
@@ -28,7 +27,7 @@ const AuthProvider = ({ children }) => {
   const signUp = async (data) => {
     try {
       axios
-        .post("/api/auth/registration", { ...data })
+        .post("/api/auth/register", { ...data })
         .then((res) => {
           console.log(res.data);
           navigate("/login");

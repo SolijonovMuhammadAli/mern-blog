@@ -1,12 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dotenv = require("dotenv");
+
 const bodyParser = require("body-parser");
 const routerAuth = require("./routes/auth.route");
-const routerTodo = require("./routes/todo.route");
 
-require("dotenv").config();
+dotenv.config();
+const app = express();
 
+// Database
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.SERVER_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -16,13 +19,11 @@ mongoose
     process.exit(1);
   });
 
-const app = express();
-
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/api/auth", routerAuth);
-app.use("/api/todo", routerTodo);
 
 const PORT = 8888;
 app.listen(PORT, () => {
