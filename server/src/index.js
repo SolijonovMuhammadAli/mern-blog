@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const bodyParser = require("body-parser");
 const routerAuth = require("./routes/auth.route");
+const routerPosts = require("./routes/posts.route");
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/api/auth", routerAuth);
+app.use("/api/posts", routerPosts);
 
 const PORT = 8888;
 app.listen(PORT, () => {
