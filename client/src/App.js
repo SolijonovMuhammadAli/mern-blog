@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import AddContainer from "./pages/Add";
+import Blog from "./pages/Blog";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<Home />} />
               <Route path="/blogs" element={<Blogs />} />
-              <Route path="/blog" element={<AddContainer />} />
+              <Route path="/blog/:id" element={<Blog />} />
+              <Route path="/add" element={<AddContainer />} />
               <Route path="/*" element={<Navigate to="/home" />} />
             </Route>
           </Routes>

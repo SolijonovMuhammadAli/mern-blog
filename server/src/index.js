@@ -1,11 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import fileUpload from "express-fileupload";
 
-const bodyParser = require("body-parser");
-const routerAuth = require("./routes/auth.route");
-const routerPosts = require("./routes/posts.route");
+import routerAuth from "./routes/route.auth.js";
+import routerPosts from "./routes/route.posts.js";
 
 dotenv.config();
 const app = express();
@@ -21,11 +21,14 @@ mongoose
   });
 
 // Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(fileUpload());
+app.use(express.json());
+app.use(express.static("uploads"));
+
+//Routes
 app.use("/api/auth", routerAuth);
-app.use("/api/posts", routerPosts);
+app.use("/api/post", routerPosts);
 
 const PORT = 8888;
 app.listen(PORT, () => {
