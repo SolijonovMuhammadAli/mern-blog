@@ -5,10 +5,7 @@ import Form from "react-bootstrap/Form";
 import { useAuth } from "../context/AuthProvider";
 
 function SignIn() {
-  const [data, setInput] = useState({
-    username: "",
-    password: "",
-  });
+  const [data, setInput] = useState({ username: "", password: "" });
   const auth = useAuth();
 
   const handleSubmitEvent = (e) => {
@@ -27,6 +24,7 @@ function SignIn() {
       [name]: value,
     }));
   };
+
   return (
     <Form onSubmit={handleSubmitEvent}>
       <Form.Group className="mb-3" controlId="formBasicEmail">

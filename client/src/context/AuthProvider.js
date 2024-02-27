@@ -11,10 +11,11 @@ const AuthProvider = ({ children }) => {
 
   const signIn = async (data) => {
     try {
-      axios
+      await axios
         .post("/api/auth/login", { ...data })
         .then((res) => {
           setUser(res.data);
+          setToken(res.data.token);
           localStorage.setItem("userData", JSON.stringify(res.data));
           navigate("/home");
         })
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }) => {
 
   const signUp = async (data) => {
     try {
-      axios
+      await axios
         .post("/api/auth/register", { ...data })
         .then((res) => {
           console.log(res.data);
