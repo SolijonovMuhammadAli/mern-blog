@@ -3,6 +3,7 @@ import path, { dirname } from "path";
 import fs from "fs";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -118,6 +119,22 @@ export const updatePost = async (req, res) => {
     post.text = text;
     await post.save();
     res.status(200).json({ messge: "Update" });
+  } catch (error) {
+    res.status(400).json({ message: "Error" });
+  }
+};
+
+export const getComments = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const list = await Promise.all(
+      post.comments.map(async (comment) => {
+        const findComment = await Comment.findById(comment);
+        const user = await User.findById(findComment.author);
+        return { _id: findComment._id, comment: findComment.comment, user: user.username };
+      })
+    );
+    res.status(200).json(list);
   } catch (error) {
     res.status(400).json({ message: "Error" });
   }

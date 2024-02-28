@@ -7,6 +7,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import routerAuth from "./routes/route.auth.js";
 import routerPosts from "./routes/route.posts.js";
+import routerComment from "./routes/route.comment.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -34,6 +35,7 @@ app.use("/files", express.static(path.join(__dirname, "uploads")));
 //Routes
 app.use("/api/auth", routerAuth);
 app.use("/api/post", routerPosts);
+app.use("/api/comment", routerComment);
 
 const PORT = 8888;
 app.listen(PORT, () => {

@@ -8,17 +8,34 @@ import Form from "react-bootstrap/Form";
 function Blog() {
   const [post, setPost] = useState(null);
 
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+
   const { id } = useParams();
 
+  const getComments = (id) => {
+    axios.get(`/post/comments/${id}`).then((res) => {
+      setComments(res.data);
+    });
+  };
+
   useEffect(() => {
-    console.log(id);
     axios
       .get("/post/" + id)
       .then((res) => {
         setPost(res.data);
       })
       .catch((err) => console.log(err));
+    getComments(id);
   }, [id]);
+
+  const onSubmitComment = (e) => {
+    e.preventDefault();
+    axios.post(`/comment/${id}`, { postId: id, comment }).then((res) => {
+      setComment("");
+      getComments(res.data.id);
+    });
+  };
 
   if (!post) return "Loading...";
   return (
@@ -42,18 +59,20 @@ function Blog() {
         </Card.Body>
       </Card>
       <div>
-        <Form>
+        <Form onSubmit={onSubmitComment}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Example textarea</Form.Label>
-            <Form.Control as="textarea" rows={1} />
+            <Form.Label>Comment</Form.Label>
+            <Form.Control value={comment} onChange={(e) => setComment(e.target.value)} />
           </Form.Group>
         </Form>
         <ListGroup>
-          <ListGroup.Item>Cras justo odio</ListGroup.Item>
-          <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-          <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-          <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-          <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+          {comments.map((item) => (
+            <ListGroup.Item key={item._id}>
+              <span>user: {item.user}</span>
+              <br />
+              <span>comment: {item.comment}</span>
+            </ListGroup.Item>
+          ))}
         </ListGroup>
       </div>
     </div>
