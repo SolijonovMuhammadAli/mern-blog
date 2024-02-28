@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import AddContainer from "./pages/Add";
 import Blog from "./pages/Blog";
+import "./assets/App.css";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/blog/:id" element={<Blog />} />
               <Route path="/add" element={<AddContainer />} />
+              <Route path="/edit/:id" element={<AddContainer />} />
               <Route path="/*" element={<Navigate to="/home" />} />
             </Route>
           </Routes>

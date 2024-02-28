@@ -1,7 +1,10 @@
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
+import fs from "fs";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createPost = async (req, res) => {
   try {
@@ -11,7 +14,6 @@ export const createPost = async (req, res) => {
 
     if (req.files) {
       let fileName = Date.now().toString() + req.files.image.name;
-      const __dirname = dirname(fileURLToPath(import.meta.url));
       req.files.image.mv(path.join(__dirname, "..", "uploads", fileName));
 
       const newPostWithImage = new Post({
@@ -25,7 +27,7 @@ export const createPost = async (req, res) => {
       await User.findByIdAndUpdate(req.userId, {
         $push: { posts: newPostWithImage },
       });
-      res.status(200).json(newPostWithImage);
+      return res.status(200).json(newPostWithImage);
     } else {
       const newPostWithoutImage = new Post({
         username: user.username,
@@ -39,11 +41,11 @@ export const createPost = async (req, res) => {
       await User.findByIdAndUpdate(req.userId, {
         $push: { posts: newPostWithoutImage },
       });
-      res.status(200).json(newPostWithoutImage);
+      return res.status(200).json(newPostWithoutImage);
     }
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: "Error" });
+    return res.status(404).json({ message: "Error" });
   }
 };
 
@@ -63,11 +65,60 @@ export const getAll = async (req, res) => {
 
 export const getId = async (req, res) => {
   try {
-    const post = await Post.findOneAndUpdate(req.params.id, {
-      $inc: { views: 1 },
-    });
-    res.status(200).json(post);
+    const post = await Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { views: 1 } });
+    return res.status(200).json(post);
   } catch (error) {
     res.status(400).json({ message: "Error get Id" });
+  }
+};
+
+export const getMyPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const list = await Promise.all(user.posts.map((post) => Post.findById(post._id)));
+    return res.status(200).json(list);
+  } catch (error) {
+    res.status(500).json({ message: "Error" });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+
+    if (!post) return res.json({ message: "Bunday post mavjud emas" });
+    if (post.imgUrl) fs.unlinkSync(path.join(__dirname, "..", "uploads", post.imgUrl));
+
+    const user = await User.findByIdAndUpdate(
+      { _id: req.userId },
+      {
+        $pull: { posts: req.params.id },
+      }
+    );
+
+    res.status(200).json({ messge: "Delete" });
+  } catch (error) {
+    res.status(400).json({ message: "Error" });
+  }
+};
+
+export const updatePost = async (req, res) => {
+  try {
+    const { title, text } = req.body;
+    const post = await Post.findById(req.params.id);
+
+    if (req.files) {
+      fs.unlinkSync(path.join(__dirname, "..", "uploads", post.imgUrl));
+      let fileName = Date.now().toString() + req.files.image.name;
+      req.files.image.mv(path.join(__dirname, "..", "uploads", fileName));
+      post.imgUrl = fileName || "";
+    }
+
+    post.title = title;
+    post.text = text;
+    await post.save();
+    res.status(200).json({ messge: "Update" });
+  } catch (error) {
+    res.status(400).json({ message: "Error" });
   }
 };

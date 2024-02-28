@@ -3,9 +3,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
-
+import path from "path";
+import { fileURLToPath } from "url";
 import routerAuth from "./routes/route.auth.js";
 import routerPosts from "./routes/route.posts.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 const app = express();
@@ -24,7 +27,9 @@ mongoose
 app.use(cors());
 app.use(fileUpload());
 app.use(express.json());
-app.use(express.static("uploads"));
+
+// Static
+app.use("/files", express.static(path.join(__dirname, "uploads")));
 
 //Routes
 app.use("/api/auth", routerAuth);

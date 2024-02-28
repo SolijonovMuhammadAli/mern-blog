@@ -16,22 +16,22 @@ function Home() {
   }, []);
 
   return (
-    <div className="d-flex gap-2 mt-2">
+    <div className="home mt-2">
       <div>
         {allData?.posts &&
           allData.posts.map((i) => (
             <Card key={i._id} style={{ width: "18rem" }}>
-              <Card.Img variant="top" src={`http://localhost:8888/${i.imgUrl}`} />
+              <Card.Img variant="top" src={`http://localhost:8888/files/${i.imgUrl}`} />
               <Card.Body>
                 <Card.Title>{i.title}</Card.Title>
                 <Card.Text>{i.text}</Card.Text>{" "}
                 <Link to={`/blog/${i._id}`}>
                   See:
-                  <Badge bg="primary">{i.comments.length || 0}</Badge>
+                  <Badge bg="primary">{i.views}</Badge>
                 </Link>
                 <div>
                   Commit:
-                  <Badge bg="primary">{i.views}</Badge>
+                  <Badge bg="primary">{i.comments.length || 0}</Badge>
                 </div>
               </Card.Body>
             </Card>

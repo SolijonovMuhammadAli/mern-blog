@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Badge } from "react-bootstrap";
 import axios from "../utils/axiosConfig";
+import ListGroup from "react-bootstrap/ListGroup";
+import Form from "react-bootstrap/Form";
 
 function Blog() {
   const [post, setPost] = useState(null);
@@ -20,10 +22,12 @@ function Blog() {
 
   if (!post) return "Loading...";
   return (
-    <div>
-      <Button>Back</Button>
+    <div className="d-flex gap-4">
+      <Link to="/home">
+        <Button>Back</Button>
+      </Link>
       <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src={`http://localhost:8888/${post.imgUrl}`} />
+        <Card.Img variant="top" src={`http://localhost:8888/files/${post.imgUrl}`} />
         <Card.Body>
           <Card.Title>{post.title}</Card.Title>
           <Card.Text>{post.text}</Card.Text>
@@ -37,6 +41,21 @@ function Blog() {
           </div>
         </Card.Body>
       </Card>
+      <div>
+        <Form>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Example textarea</Form.Label>
+            <Form.Control as="textarea" rows={1} />
+          </Form.Group>
+        </Form>
+        <ListGroup>
+          <ListGroup.Item>Cras justo odio</ListGroup.Item>
+          <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
+          <ListGroup.Item>Morbi leo risus</ListGroup.Item>
+          <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
+          <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+        </ListGroup>
+      </div>
     </div>
   );
 }
